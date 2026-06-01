@@ -1,3 +1,4 @@
+import dj_database_url
 """
 Настройки Django проекта "Мудрость предков"
 Курсовая работа по дисциплине "Основы web-программирования"
@@ -90,11 +91,10 @@ WSGI_APPLICATION = 'tuvin_proverbs.wsgi.application'
 # =============================================================================
 
 DATABASES = {
-    'default': {
-        # Используем SQLite для простоты переноса между ПК
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Файл базы данных в корне проекта
-    }
+    'default': dj_database_url.config(
+        default='postgresql://neondb_owner:npg_1Bak5QnElltP@ep-small-cherry-aqev4t0h.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require',
+        conn_max_age=600
+    )
 }
 
 # =============================================================================
