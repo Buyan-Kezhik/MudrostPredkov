@@ -93,11 +93,10 @@ WSGI_APPLICATION = 'tuvin_proverbs.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://neondb_owner:npg_PgOTMt2HD6Lf@ep-small-cherry-aqev4t0h-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require',
+        default='postgresql://neondb_owner:npg_PgOTMt2HD6Lf@ep-small-cherry-aqev4t0h.us-east-1.aws.neon.tech/neondb?sslmode=require',
         conn_max_age=600
     )
 }
-
 
 # =============================================================================
 # ВАЛИДАЦИЯ ПАРОЛЕЙ
