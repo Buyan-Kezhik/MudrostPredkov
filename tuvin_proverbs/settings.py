@@ -91,13 +91,15 @@ WSGI_APPLICATION = 'tuvin_proverbs.wsgi.application'
 # БАЗА ДАННЫХ
 # =============================================================================
 
+import os
+import dj_database_url
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://neondb_owner:npg_PgOTMt2HD6Lf@ep-small-cherry-aqev4t0h.us-east-1.aws.neon.tech/neondb?sslmode=require',
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
 }
-
 # =============================================================================
 # ВАЛИДАЦИЯ ПАРОЛЕЙ
 # =============================================================================
