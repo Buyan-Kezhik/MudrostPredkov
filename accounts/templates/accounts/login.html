@@ -1,0 +1,46 @@
+<!-- 
+Страница входа пользователя
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Форма авторизации для существующих пользователей.
+Содержит поля для ввода логина и пароля.
+Адаптивный дизайн для мобильных устройств.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Вход - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2 style="margin-bottom: 25px; color: #333;">🔐 Вход в систему</h2>
+    
+    <form method="POST" style="max-width: 400px; margin: 0 auto;">
+        {% csrf_token %}
+        
+        <!-- Поле ввода логина -->
+        <div class="form-group">
+            <label for="username">Логин</label>
+            <input type="text" id="username" name="username" required 
+                   placeholder="Введите ваш логин" autocomplete="username">
+        </div>
+        
+        <!-- Поле ввода пароля -->
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Введите ваш пароль" autocomplete="current-password">
+        </div>
+        
+        <!-- Кнопка входа -->
+        <button type="submit" class="btn" style="width: 100%;">Войти</button>
+    </form>
+    
+    <!-- Ссылка на регистрацию -->
+    <p style="margin-top: 20px; color: #666;">
+        Нет аккаунта? <a href="{% url 'accounts:register' %}" style="color: #667eea;">Зарегистрироваться</a>
+    </p>
+</div>
+{% endblock %}

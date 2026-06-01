@@ -1,0 +1,65 @@
+<!-- 
+Страница таблицы лидеров (рейтинг игроков)
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Отображает топ-10 игроков по количеству побед.
+Доступна всем пользователям (не требует авторизации).
+Адаптивная таблица для мобильных устройств.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Рейтинг - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2 style="margin-bottom: 25px; color: #333;">🏆 Таблица лидеров</h2>
+    
+    {% if leaders %}
+    <!-- Адаптивная таблица -->
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white;">
+            <thead>
+                <tr style="background: #667eea; color: white;">
+                    <th style="padding: 15px; text-align: left;">#</th>
+                    <th style="padding: 15px; text-align: left;">Игрок</th>
+                    <th style="padding: 15px; text-align: center;">Побед</th>
+                    <th style="padding: 15px; text-align: center;">Игр</th>
+                    <th style="padding: 15px; text-align: center;">Попыток</th>
+                    <th style="padding: 15px; text-align: center;">Лучший счёт</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leader in leaders %}
+                <tr style="border-bottom: 1px solid #e5e7eb; {% if leader.user == user %}background: #f0f4ff;{% endif %}">
+                    <td style="padding: 15px; font-weight: bold; color: #667eea;">
+                        {% if forloop.counter == 1 %}🥇{% elif forloop.counter == 2 %}🥈{% elif forloop.counter == 3 %}🥉{% else %}{{ forloop.counter }}{% endif %}
+                    </td>
+                    <td style="padding: 15px;">{{ leader.user.username }}</td>
+                    <td style="padding: 15px; text-align: center;">{{ leader.wins }}</td>
+                    <td style="padding: 15px; text-align: center;">{{ leader.total_games }}</td>
+                    <td style="padding: 15px; text-align: center;">{{ leader.total_attempts }}</td>
+                    <td style="padding: 15px; text-align: center;">{{ leader.best_score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <!-- Если нет игроков -->
+    <div style="background: #f9fafb; padding: 30px; border-radius: 12px;">
+        <p style="color: #666; font-size: 1.1em;">Пока нет игроков. Стань первым! 🎮</p>
+    </div>
+    {% endif %}
+    
+    <!-- Кнопки навигации -->
+    <div style="margin-top: 30px;">
+        <a href="{% url 'game:home' %}" class="btn">← На главную</a>
+        <a href="{% url 'game:start_game' %}" class="btn btn-success" style="margin-left: 10px;">
+            🎮 Играть
+        </a>
+    </div>
+</div>
+{% endblock %}

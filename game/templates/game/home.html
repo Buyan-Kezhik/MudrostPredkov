@@ -1,0 +1,68 @@
+<!-- 
+Главная страница сайта
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Приветственная страница с информацией об игре.
+Для авторизованных пользователей - кнопка начала игры.
+Для гостей - предложение зарегистрироваться.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Главная - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    {% if user.is_authenticated %}
+        <!-- Блок для авторизованных пользователей -->
+        <h2 style="margin-bottom: 20px; color: #333;">👋 Привет, {{ user.username }}!</h2>
+        <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
+            Готов проверить свои знания тувинских пословиц?
+        </p>
+        <a href="{% url 'game:start_game' %}" class="btn btn-success" style="font-size: 1.2em; padding: 15px 40px;">
+            🎮 Начать игру
+        </a>
+        <br><br>
+        <a href="{% url 'game:leaderboard' %}" class="btn" style="font-size: 1.1em;">
+            🏆 Таблица лидеров
+        </a>
+    {% else %}
+        <!-- Блок для гостей (неавторизованных) -->
+        <h2 style="margin-bottom: 20px; color: #333;">🏔️ Добро пожаловать!</h2>
+        <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
+            Проверь свои знания тувинских пословиц и пополни ряды мудрецов!
+        </p>
+        <a href="{% url 'accounts:register' %}" class="btn btn-success" style="font-size: 1.2em; padding: 15px 40px;">
+            📝 Зарегистрироваться
+        </a>
+        <br><br>
+        <a href="{% url 'accounts:login' %}" class="btn" style="font-size: 1.1em;">
+            🔐 Войти
+        </a>
+    {% endif %}
+    
+    <!-- Блок с правилами игры -->
+    <div style="margin-top: 40px; padding: 25px; background: #f9fafb; border-radius: 12px; text-align: left;">
+        <h3 style="color: #667eea; margin-bottom: 15px;">📜 Правила игры:</h3>
+        <ul style="color: #666; line-height: 2; margin-left: 20px;">
+            <li>✅ Вам будет предложено <strong>10 тувинских пословиц</strong></li>
+            <li>✅ В каждой пословице пропущено <strong>одно слово</strong></li>
+            <li>✅ У вас есть <strong>3 попытки</strong> на каждый ответ</li>
+            <li>✅ Чем меньше ошибок — тем выше в рейтинге!</li>
+        </ul>
+    </div>
+    
+    <!-- Блок о проекте (для курсовой) -->
+    <div style="margin-top: 30px; padding: 20px; background: #e0f2fe; border-radius: 12px; text-align: left;">
+        <h3 style="color: #0369a1; margin-bottom: 10px;">ℹ️ О проекте:</h3>
+        <p style="color: #666; line-height: 1.8;">
+            Данный веб-сайт разработан в рамках курсовой работы по дисциплине 
+            <strong>«Основы web-программирования»</strong>. 
+            Цель проекта — сохранение и популяризация тувинского фольклора через 
+            интерактивный образовательный формат.
+        </p>
+    </div>
+</div>
+{% endblock %}

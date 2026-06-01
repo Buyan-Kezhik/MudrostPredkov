@@ -1,0 +1,65 @@
+<!-- 
+Страница завершения игры
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Отображает результаты завершённой игры:
+- Количество правильных ответов
+- Процент точности
+- Общая статистика
+Адаптивный дизайн для мобильных устройств.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Результаты - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2 style="margin-bottom: 25px; color: #333;">🎉 Игра завершена!</h2>
+    
+    <!-- Блок с результатом -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px;">
+        <h3 style="font-size: 2em; margin-bottom: 15px;">
+            {{ correct }} из {{ total }}
+        </h3>
+        <p style="font-size: 1.2em; opacity: 0.9;">
+            правильных ответов
+        </p>
+        <div style="margin-top: 20px; font-size: 3em;">
+            {% if percentage >= 80 %}
+                🏆
+            {% elif percentage >= 50 %}
+                ⭐
+            {% else %}
+                📚
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Детальная статистика -->
+    <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+        <h3 style="color: #667eea; margin-bottom: 15px;">Ваш результат:</h3>
+        <p style="font-size: 1.1em; color: #666;">
+            Точность: <strong>{{ percentage|floatformat:1 }}%</strong>
+        </p>
+        {% if percentage >= 80 %}
+            <p style="color: #10b981; margin-top: 10px;">🎊 Отличный результат! Вы настоящий мудрец!</p>
+        {% elif percentage >= 50 %}
+            <p style="color: #f59e0b; margin-top: 10px;">👍 Хороший результат! Продолжайте учиться!</p>
+        {% else %}
+            <p style="color: #666; margin-top: 10px;">📖 Не расстраивайтесь! Практика ведёт к совершенству!</p>
+        {% endif %}
+    </div>
+    
+    <!-- Кнопки действий -->
+    <a href="{% url 'game:start_game' %}" class="btn btn-success" style="margin-right: 10px;">
+        🔄 Сыграть ещё раз
+    </a>
+    <a href="{% url 'game:leaderboard' %}" class="btn">
+        🏆 Рейтинг
+    </a>
+</div>
+{% endblock %}

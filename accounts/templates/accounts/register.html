@@ -1,0 +1,77 @@
+<!-- 
+Страница регистрации нового пользователя
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Форма регистрации для новых пользователей.
+Содержит поля для ввода логина, пароля и подтверждения пароля.
+Валидация формы на стороне сервера (Django forms).
+Адаптивный дизайн для мобильных устройств.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Регистрация - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2 style="margin-bottom: 25px; color: #333;">📝 Регистрация</h2>
+    
+    <form method="POST" style="max-width: 400px; margin: 0 auto;">
+        {% csrf_token %}
+        
+        <!-- Поле логина -->
+        <div class="form-group">
+            <label for="id_username">Логин</label>
+            {{ form.username }}
+        </div>
+        
+        <!-- Поле пароля -->
+        <div class="form-group">
+            <label for="id_password1">Пароль</label>
+            {{ form.password1 }}
+        </div>
+        
+        <!-- Поле подтверждения пароля -->
+        <div class="form-group">
+            <label for="id_password2">Повторите пароль</label>
+            {{ form.password2 }}
+        </div>
+        
+        <!-- Блок ошибок формы -->
+        {% if form.errors %}
+        <div style="background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: left;">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <div>• {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Кнопка регистрации -->
+        <button type="submit" class="btn" style="width: 100%;">Зарегистрироваться</button>
+    </form>
+    
+    <!-- Ссылка на вход -->
+    <p style="margin-top: 20px; color: #666;">
+        Уже есть аккаунт? <a href="{% url 'accounts:login' %}" style="color: #667eea;">Войти</a>
+    </p>
+</div>
+
+<!-- Стили для полей формы Django -->
+<style>
+    #id_username, #id_password1, #id_password2 {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1em;
+    }
+    #id_username:focus, #id_password1:focus, #id_password2:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+</style>
+{% endblock %}

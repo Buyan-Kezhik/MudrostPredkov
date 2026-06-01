@@ -1,0 +1,123 @@
+<!-- 
+Страница игрового процесса
+Курсовая работа: "Мудрость предков" - квест по тувинским пословицам
+Студент: [ТВОЁ ФИО]
+Группа: [ТВОЯ ГРУППА]
+
+Описание:
+Основная игровая страница, где пользователь видит пословицу
+с пропущенным словом и вводит свой ответ.
+Использует AJAX для проверки ответа без перезагрузки страницы.
+Адаптивный дизайн для мобильных устройств.
+-->
+{% extends 'game/base.html' %}
+
+{% block title %}Игра - Мудрость предков{% endblock %}
+
+{% block content %}
+<div class="content">
+    <!-- Индикатор прогресса -->
+    <div style="background: #f0f4ff; padding: 15px; border-radius: 10px; margin-bottom: 25px;">
+        <strong>Вопрос {{ current_number }} из {{ total_questions }}</strong>
+    </div>
+    
+    <!-- Блок с пословицей -->
+    <div style="background: #fef3c7; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #f59e0b;">
+        <p style="font-size: 1.3em; color: #333; line-height: 1.8;">
+            {{ proverb.text|safe }}
+        </p>
+    </div>
+    
+    <!-- Подсказка (если есть) -->
+    {% if proverb.hint %}
+    <div style="background: #e0f2fe; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+        <strong>💡 Подсказка:</strong> {{ proverb.hint }}
+    </div>
+    {% endif %}
+    
+    <!-- Счётчик попыток -->
+    <div style="margin-bottom: 15px; color: #666;">
+    Попыток использовано: <strong id="attemptsCount">{{ attempts }}</strong> из 3
+    </div>
+    
+    <!-- Форма для ввода ответа -->
+    <form id="answerForm" style="max-width: 400px; margin: 0 auto;">
+        {% csrf_token %}
+        <input type="hidden" name="session_id" value="{{ session.id }}">
+        
+        <div class="form-group">
+            <input type="text" id="answer" name="answer" required 
+                   placeholder="Введите пропущенное слово" autocomplete="off">
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%;">Проверить ответ</button>
+    </form>
+    
+    <!-- Блок для отображения результата -->
+    <div id="result" style="margin-top: 20px; padding: 15px; border-radius: 8px; display: none;"></div>
+    
+    <!-- Кнопка перехода к следующему вопросу -->
+    <div id="nextButton" style="margin-top: 20px; display: none;">
+        <a href="#" id="nextLink" class="btn btn-success">Следующий вопрос →</a>
+    </div>
+</div>
+
+<!-- JavaScript для проверки ответа (AJAX) -->
+{% block extra_js %}
+<script>
+document.getElementById('answerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const resultDiv = document.getElementById('result');
+    const nextButton = document.getElementById('nextButton');
+    const answerInput = document.getElementById('answer');
+    const attemptsCount = document.getElementById('attemptsCount');
+    const submitBtn = this.querySelector('button[type="submit"]'); // Находим кнопку отправки
+
+    fetch('{% url "game:check_answer" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        resultDiv.style.display = 'block';
+        
+        if (data.attempts) {
+            attemptsCount.textContent = data.attempts;
+        }
+
+        if (data.correct) {
+            resultDiv.style.background = '#d1fae5';
+            resultDiv.style.color = '#065f46';
+            resultDiv.innerHTML = ' ✅ ' + data.message;
+            answerInput.disabled = true;
+            submitBtn.disabled = true; // <--- Блокируем кнопку ПРОВЕРИТЬ
+            nextButton.style.display = 'block';
+            document.getElementById('nextLink').href = '/game/play/{{ session.id }}/next/';
+        } else {
+            resultDiv.style.background = '#fee2e2';
+            resultDiv.style.color = '#991b1b';
+            resultDiv.innerHTML = ' ❌ ' + data.message;
+            
+            if (data.max_attempts) {
+                answerInput.disabled = true;
+                submitBtn.disabled = true; // <--- Блокируем кнопку ПРОВЕРИТЬ при конце попыток
+                nextButton.style.display = 'block';
+                document.getElementById('nextLink').href = '/game/play/{{ session.id }}/next/';
+            }
+        }
+    })
+    .catch(error => {
+        resultDiv.style.display = 'block';
+        resultDiv.style.background = '#fee2e2';
+        resultDiv.style.color = '#991b1b';
+        resultDiv.innerHTML = ' Ошибка соединения. Попробуйте ещё раз.';
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
